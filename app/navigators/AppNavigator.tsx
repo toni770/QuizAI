@@ -39,6 +39,8 @@ export type AppStackParamList = {
   Login: undefined
   Demo: NavigatorScreenParams<DemoTabParamList>
   // 🔥 Your screens go here
+  QuizGenerator: undefined
+  Quiz: undefined
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
@@ -64,13 +66,16 @@ const AppStack = observer(function AppStack() {
   return (
     <Stack.Navigator
       screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
-      initialRouteName={isAuthenticated ? "Welcome" : "Login"}
+      initialRouteName={isAuthenticated ? "QuizGenerator" : "Login"}
     >
       {isAuthenticated ? (
         <>
           <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />
 
           <Stack.Screen name="Demo" component={DemoNavigator} />
+
+          <Stack.Screen name="QuizGenerator" component={Screens.QuizGeneratorScreen} />
+          <Stack.Screen name="Quiz" component={Screens.QuizScreen} />
         </>
       ) : (
         <>
