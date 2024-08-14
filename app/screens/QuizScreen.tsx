@@ -1,70 +1,75 @@
-import React, { FC, useState } from "react"
+import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
 import { Button, Icon, Screen, Text } from "app/components"
+import { shuffleArray } from "app/utils/shuffleArray"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
 interface QuizScreenProps extends AppStackScreenProps<"Quiz"> {}
 
-const dumpData = [
-  { Q: "¿En qué año se congela Fry?", A: ["1999", "2000", "2010", "2020"] },
-  {
-    Q: "¿Cómo se llama el robot mejor amigo de Fry?",
-    A: ["Bender", "Flexo", "Calculon", "Roberto"],
-  },
-  {
-    Q: "¿Qué título ostenta el profesor Farnsworth?",
-    A: ["Profesor", "Doctor", "Señor", "Capitán"],
-  },
-  {
-    Q: "¿Cuál es el nombre completo de Leela?",
-    A: ["Turanga Leela", "Leela Turanga", "Leela Fry", "Leela Wong"],
-  },
-  {
-    Q: "¿Qué planeta es la sede de Planet Express?",
-    A: ["Tierra", "Marte", "Omicron Persei 8", "Chapek 9"],
-  },
-  {
-    Q: "¿Quién es el presidente de la Tierra en Futurama?",
-    A: ["Richard Nixon", "George Washington", "Abraham Lincoln", "Thomas Jefferson"],
-  },
-  {
-    Q: "¿Cómo se llama el asistente del Capitán Zapp Brannigan?",
-    A: ["Kif Kroker", "Hermes Conrad", "Morbo", "Lrrr"],
-  },
-  {
-    Q: "¿Qué tipo de mascota es Nibbler?",
-    A: ["Nibloniano", "Terrícola", "Amphibiosano", "Neptuniano"],
-  },
-  { Q: "¿Qué es Slurm?", A: ["Una bebida", "Un robot", "Una nave espacial", "Un planeta"] },
-  {
-    Q: "¿Qué equipo de béisbol sigue Fry?",
-    A: ["New New York Mets", "New York Yankees", "Boston Red Sox", "Chicago Cubs"],
-  },
-]
-export const QuizScreen: FC<QuizScreenProps> = observer(function QuizScreen() {
-  const [current, setCurrent] = useState(0)
+export const QuizScreen: FC<QuizScreenProps> = observer(function QuizScreen(_props) {
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
+  const [selectedAnswer, setSelectedAnswer] = useState<string | undefined>(undefined)
+  const [shuffledAnswers, setShuffledAnswers] = useState<Array<string>>([])
+  const [score, setScore] = useState(0)
+
+  const questions = _props.route.params.questions
+
+  useEffect(() => {
+    const answers = shuffleArray([...questions[currentQuestionIndex].A])
+    setShuffledAnswers(answers)
+  }, [currentQuestionIndex])
+
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
 
   // Pull in navigation via hook
   // const navigation = useNavigation()
+
+  const answerQuestion = function (answer: string) {
+    if (answer === questions[currentQuestionIndex].A[0]) {
+      setScore(score + 1)
+    }
+    setSelectedAnswer(answer)
+  }
+
   return (
     <Screen style={$root} preset="fixed">
-      <Text text={dumpData[current].Q} size="xl" />
-      {dumpData[current].A.map((item, index) => {
-        return <Button style={$buttons} key={index} text={item} />
+      <Text text={questions[currentQuestionIndex].Q} size="xl" />
+      {shuffledAnswers.map((value, index) => {
+        return (
+          <Button
+            style={[
+              $buttons,
+              selectedAnswer !== undefined &&
+                (value === questions[currentQuestionIndex].A[0]
+                  ? $correctButton
+                  : value === selectedAnswer && $wrongButton),
+            ]}
+            key={index}
+            text={value}
+            onPress={() => answerQuestion(value)}
+            disabled={selectedAnswer !== undefined}
+          />
+        )
       })}
 
-      <Icon
-        icon={"caretRight"}
-        size={50}
-        onPress={() => {
-          setCurrent(current + 1)
-        }}
-      />
+      {selectedAnswer && (
+        <Icon
+          icon={"caretRight"}
+          size={50}
+          onPress={() => {
+            if (currentQuestionIndex < questions.length - 1) {
+              setSelectedAnswer(undefined)
+              setCurrentQuestionIndex(currentQuestionIndex + 1)
+            } else {
+              _props.navigation.navigate("QuizGenerator")
+            }
+          }}
+        />
+      )}
     </Screen>
   )
 })
@@ -77,4 +82,12 @@ const $root: ViewStyle = {
 
 const $buttons: ViewStyle = {
   marginVertical: 5,
+}
+
+const $correctButton: ViewStyle = {
+  backgroundColor: "green",
+}
+
+const $wrongButton: ViewStyle = {
+  backgroundColor: "red",
 }
