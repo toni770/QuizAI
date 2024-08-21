@@ -76,9 +76,9 @@ export class QuizApi extends Api {
 
   async getQuiz(quizParams: QuizParams): Promise<APIResponse> {
     try {
-      if (process.env.EXPO_PUBLIC_USE_API === "0") {
-        return { data: questions, success: true }
-      }
+      // if (process.env.EXPO_PUBLIC_USE_API === "0") {
+      //   return { data: questions, success: true }
+      // }
       const response = await this.apisauce.post("/chat/completions", {
         model: "gpt-4o-mini",
         messages: [

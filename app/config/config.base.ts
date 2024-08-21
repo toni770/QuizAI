@@ -33,7 +33,7 @@ Q:"Pregunta..",
 A: ["Respuesta1", "Respuesta2",...]
 }
 ]. 
-Cada pregunta tendra 4 respuestas. La respuesta correcta debe ser siempre la primera. No escribas ningun texto que no sea el resultado. Antes de contestar, comprueba el tema del test es un tema existente, ya sea una serie, peli, tema, etc... Si no existe o es un contenido inadecuado, debes devolver el siguiente formato JSON: {"Error": "TOPIC NOT FOUND"}
+Cada pregunta tendra 4 respuestas. La respuesta correcta debe ser siempre la primera. No escribas ningun texto que no sea el resultado. Antes de contestar, si es un contenido inadecuado, debes devolver el siguiente formato JSON: {"Error": "TOPIC NOT FOUND"}
 Asegurate de reducir al maximo el numero de tokens de la respuesta eliminado espacios o saltos de lineas innecesarios, pero sin acortat las preguntas ni respuestas.
 LO MAS IMPORTANTE asegurate que sea nivel dificil`,
   },
