@@ -10,17 +10,19 @@ import { shuffleArray } from "app/utils/shuffleArray"
 interface QuizScreenProps extends AppStackScreenProps<"Quiz"> {}
 
 export const QuizScreen: FC<QuizScreenProps> = observer(function QuizScreen(_props) {
+  const { questions } = _props.route.params
+
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<string | undefined>(undefined)
   const [shuffledAnswers, setShuffledAnswers] = useState<Array<string>>([])
   const [score, setScore] = useState(0)
 
-  const questions = _props.route.params.questions
-
   useEffect(() => {
-    const answers = shuffleArray([...questions[currentQuestionIndex].A])
-    setShuffledAnswers(answers)
-  }, [currentQuestionIndex])
+    if (questions && questions.length > 0) {
+      const answers = shuffleArray([...questions[currentQuestionIndex].A])
+      setShuffledAnswers(answers)
+    }
+  }, [questions, currentQuestionIndex])
 
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
@@ -30,7 +32,7 @@ export const QuizScreen: FC<QuizScreenProps> = observer(function QuizScreen(_pro
 
   const answerQuestion = function (answer: string) {
     if (answer === questions[currentQuestionIndex].A[0]) {
-      setScore(score + 1)
+      setScore(score + 10)
     }
     setSelectedAnswer(answer)
   }
@@ -65,7 +67,7 @@ export const QuizScreen: FC<QuizScreenProps> = observer(function QuizScreen(_pro
               setSelectedAnswer(undefined)
               setCurrentQuestionIndex(currentQuestionIndex + 1)
             } else {
-              _props.navigation.navigate("QuizGenerator")
+              _props.navigation.navigate("QuizResults", { score })
             }
           }}
         />

@@ -34,6 +34,44 @@ export interface ApiFeedResponse {
   items: EpisodeItem[]
 }
 
+/// QUIZ
+export interface QuizParams {
+  topic: string
+}
+
+export interface QuizQuestion {
+  Q: string
+  A: Array<string>
+}
+
+export interface APIResponse {
+  data?: any
+  error?: any
+  success: boolean
+}
+
+export interface OpenAIResponse {
+  id: string
+  object: string
+  created: number
+  model: string
+  system_fingerprint: string
+  choices: {
+    index: number
+    message: {
+      role: string
+      content: string
+    }
+    logprobs: null
+    finish_reason: string
+  }[]
+  usage: {
+    prompt_tokens: number
+    completion_tokens: number
+    total_tokens: number
+  }
+}
+
 /**
  * The options used to configure apisauce.
  */
@@ -47,4 +85,6 @@ export interface ApiConfig {
    * Milliseconds before we timeout the request.
    */
   timeout: number
+
+  headers: any
 }

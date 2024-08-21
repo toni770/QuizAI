@@ -21,7 +21,7 @@ export const WelcomeScreen: FC<WelcomeScreenProps> = observer(function WelcomeSc
   } = useStores()
 
   function goNext() {
-    navigation.navigate("QuizGenerator")
+    navigation.navigate("QuizResults", { score: 100 })
   }
 
   useHeader(

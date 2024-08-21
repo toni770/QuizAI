@@ -17,6 +17,9 @@ import type { EpisodeSnapshotIn } from "../../models/Episode"
 export const DEFAULT_API_CONFIG: ApiConfig = {
   url: Config.API_URL,
   timeout: 10000,
+  headers: {
+    Accept: "application/json",
+  },
 }
 
 /**
@@ -35,9 +38,7 @@ export class Api {
     this.apisauce = create({
       baseURL: this.config.url,
       timeout: this.config.timeout,
-      headers: {
-        Accept: "application/json",
-      },
+      headers: this.config.headers,
     })
   }
 
