@@ -1,16 +1,18 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { ViewStyle } from "react-native"
+import { View, ViewStyle } from "react-native"
 import { AppStackScreenProps } from "app/navigators"
 import { Button, Icon, Screen, Text } from "app/components"
 import { shuffleArray } from "app/utils/shuffleArray"
+import { Categories } from "app/services/api/api.types"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
+import { translate } from "../i18n/translate"
 
 interface QuizScreenProps extends AppStackScreenProps<"Quiz"> {}
 
 export const QuizScreen: FC<QuizScreenProps> = observer(function QuizScreen(_props) {
-  const { questions } = _props.route.params
+  const { quiz } = _props.route.params
 
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0)
   const [selectedAnswer, setSelectedAnswer] = useState<string | undefined>(undefined)
@@ -18,11 +20,11 @@ export const QuizScreen: FC<QuizScreenProps> = observer(function QuizScreen(_pro
   const [score, setScore] = useState(0)
 
   useEffect(() => {
-    if (questions && questions.length > 0) {
-      const answers = shuffleArray([...questions[currentQuestionIndex].A])
+    if (quiz && quiz.R.length > 0) {
+      const answers = shuffleArray([...quiz.R[currentQuestionIndex].A])
       setShuffledAnswers(answers)
     }
-  }, [questions, currentQuestionIndex])
+  }, [quiz, currentQuestionIndex])
 
   // Pull in one of our MST stores
   // const { someStore, anotherStore } = useStores()
@@ -31,22 +33,27 @@ export const QuizScreen: FC<QuizScreenProps> = observer(function QuizScreen(_pro
   // const navigation = useNavigation()
 
   const answerQuestion = function (answer: string) {
-    if (answer === questions[currentQuestionIndex].A[0]) {
+    if (answer === quiz.R[currentQuestionIndex].A[0]) {
       setScore(score + 10)
     }
     setSelectedAnswer(answer)
   }
 
   return (
-    <Screen style={$root} preset="fixed">
-      <Text text={questions[currentQuestionIndex].Q} size="xl" />
+    <Screen style={$root}>
+      <View>
+        <Text text={quiz.T} size="xxl" />
+        <Text text={translate(Categories[quiz.C])} size="xl" />
+      </View>
+
+      <Text text={quiz.R[currentQuestionIndex].Q} size="xl" />
       {shuffledAnswers.map((value, index) => {
         return (
           <Button
             style={[
               $buttons,
               selectedAnswer !== undefined &&
-                (value === questions[currentQuestionIndex].A[0]
+                (value === quiz.R[currentQuestionIndex].A[0]
                   ? $correctButton
                   : value === selectedAnswer && $wrongButton),
             ]}
@@ -63,7 +70,7 @@ export const QuizScreen: FC<QuizScreenProps> = observer(function QuizScreen(_pro
           icon={"caretRight"}
           size={50}
           onPress={() => {
-            if (currentQuestionIndex < questions.length - 1) {
+            if (currentQuestionIndex < quiz.R.length - 1) {
               setSelectedAnswer(undefined)
               setCurrentQuestionIndex(currentQuestionIndex + 1)
             } else {
@@ -79,7 +86,7 @@ export const QuizScreen: FC<QuizScreenProps> = observer(function QuizScreen(_pro
 const $root: ViewStyle = {
   flex: 1,
   alignItems: "center",
-  justifyContent: "center",
+  justifyContent: "space-around",
 }
 
 const $buttons: ViewStyle = {

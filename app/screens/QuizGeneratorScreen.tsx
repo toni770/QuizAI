@@ -25,10 +25,10 @@ export const QuizGeneratorScreen: FC<QuizGeneratorScreenProps> = observer(
         <Button
           text="Generate"
           onPress={async () => {
-            const result = await quizApi.getQuiz({ topic })
+            const result = await quizApi.getQuiz({ topic, language: "ES", numQuestions: 5 })
 
             if (result.success) {
-              navigation.navigate("Quiz", { questions: result.data })
+              navigation.navigate("Quiz", { quiz: result.data })
             } else {
               console.log(result.error)
             }

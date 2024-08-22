@@ -5,6 +5,15 @@ const en = {
     back: "Back",
     logOut: "Log Out",
   },
+  categories: {
+    category1: "Entertainment",
+    category2: "Art and Literature",
+    category3: "Geography",
+    category4: "History",
+    category5: "Science",
+    category6: "Sports",
+    category7: "General",
+  },
   welcomeScreen: {
     postscript:
       "psst  — This probably isn't what your app looks like. (Unless your designer handed you these screens, and in that case, ship it!)",

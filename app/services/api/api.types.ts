@@ -1,3 +1,5 @@
+import { TxKeyPath } from "app/i18n"
+
 /**
  * These types indicate the shape of the data you expect to receive from your
  * API endpoint, assuming it's a JSON object like we have.
@@ -37,11 +39,29 @@ export interface ApiFeedResponse {
 /// QUIZ
 export interface QuizParams {
   topic: string
+  language: string
+  numQuestions: number
 }
 
 export interface QuizQuestion {
   Q: string
   A: Array<string>
+}
+
+export interface Quiz {
+  T: string
+  C: number
+  R: QuizQuestion[]
+}
+
+export const Categories: Record<number, TxKeyPath> = {
+  1: "categories.category1",
+  2: "categories.category2",
+  3: "categories.category3",
+  4: "categories.category4",
+  5: "categories.category5",
+  6: "categories.category6",
+  7: "categories.category7",
 }
 
 export interface APIResponse {

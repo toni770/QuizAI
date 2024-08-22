@@ -20,7 +20,7 @@ import { useStores } from "../models"
 import { DemoTabParamList } from "./DemoNavigator"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
-import { QuizQuestion } from "app/services/api"
+import { Quiz } from "app/services/api"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -41,7 +41,7 @@ export type AppStackParamList = {
   Demo: NavigatorScreenParams<DemoTabParamList>
   // 🔥 Your screens go here
   QuizGenerator: undefined
-  Quiz: { questions: Array<QuizQuestion> }
+  Quiz: { quiz: Quiz }
   QuizResults: { score: number }
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
