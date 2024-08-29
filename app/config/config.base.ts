@@ -33,7 +33,7 @@ const BaseConfig: ConfigBaseProps = {
 "R":[{"Q":"Pregunta..", "A": ["Respuesta1", ...]}]}
 En T debes poner el titulo del tema que te he paso en CamelCase con espacios y corrigiendo en caso de estar mal escrito. En C debes clasificar el tema en una de estas categorias y pasar el id: 1:Entretenimiento, 2:Arte y literatura, 3:Ciencia, 4:General, 5:Historia, 6:Geografia, 7:Deportes. Cada pregunta tendra 4 respuestas. La respuesta correcta debe ser siempre la primera. No escribas ningun texto que no sea el resultado.Si el tema no existe o es un contenido inadecuado, debes devolver el siguiente formato JSON: {"Error": "TOPIC NOT FOUND"}
 Asegurate de reducir al maximo el numero de tokens de la respuesta eliminado espacios o saltos de lineas innecesarios, pero sin acortat las preguntas ni respuestas.
-Asegurate que sea nivel dificil`,
+Que las preguntas sean muy dificiles`,
   },
 }
 

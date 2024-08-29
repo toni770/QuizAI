@@ -8,11 +8,11 @@ const en = {
   categories: {
     category1: "Entertainment",
     category2: "Art and Literature",
-    category3: "Geography",
-    category4: "History",
-    category5: "Science",
-    category6: "Sports",
-    category7: "General",
+    category3: "Science",
+    category4: "General",
+    category5: "History",
+    category6: "Geography",
+    category7: "Sports",
   },
   welcomeScreen: {
     postscript:
