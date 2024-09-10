@@ -17,9 +17,7 @@
       "fallbackToCacheTimeout": 0
     },
     "jsEngine": "hermes",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "icon": "./assets/images/app-icon-android-legacy.png",
       "package": "com.quiz.quizAI",
@@ -53,8 +51,14 @@
       },
       "bundler": "metro"
     },
+    "extra": {
+      "eas": {
+        "projectId": "1a2bfed4-c685-4dee-ab20-56120071f1a7"
+      }
+    },
     "plugins": [
       "expo-localization",
+      "expo-secure-store",
       [
         "expo-build-properties",
         {
