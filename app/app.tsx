@@ -30,7 +30,8 @@ import { customFontsToLoad } from "./theme"
 import Config from "./config"
 import { GestureHandlerRootView } from "react-native-gesture-handler"
 import { ViewStyle } from "react-native"
-import { AuthProvider } from "./services/api/auth/useAuth"
+import { AuthProvider } from "./services/api/supabase/auth/useAuth"
+import { DBProvider } from "./services/api/supabase/db/useDB"
 
 export const NAVIGATION_PERSISTENCE_KEY = "NAVIGATION_STATE"
 
@@ -102,17 +103,19 @@ function App(props: AppProps) {
   // otherwise, we're ready to render the app
   return (
     <AuthProvider>
-      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <ErrorBoundary catchErrors={Config.catchErrors}>
-          <GestureHandlerRootView style={$container}>
-            <AppNavigator
-              linking={linking}
-              initialState={initialNavigationState}
-              onStateChange={onNavigationStateChange}
-            />
-          </GestureHandlerRootView>
-        </ErrorBoundary>
-      </SafeAreaProvider>
+      <DBProvider>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+          <ErrorBoundary catchErrors={Config.catchErrors}>
+            <GestureHandlerRootView style={$container}>
+              <AppNavigator
+                linking={linking}
+                initialState={initialNavigationState}
+                onStateChange={onNavigationStateChange}
+              />
+            </GestureHandlerRootView>
+          </ErrorBoundary>
+        </SafeAreaProvider>
+      </DBProvider>
     </AuthProvider>
   )
 }

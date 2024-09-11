@@ -5,7 +5,7 @@ import { AppStackScreenProps } from "app/navigators"
 import { Button, Screen, Text, TextField } from "app/components"
 import { useSafeAreaInsetsStyle } from "app/utils/useSafeAreaInsetsStyle"
 import { colors, spacing } from "app/theme"
-import { useAuth } from "app/services/api/auth/useAuth"
+import { useAuth } from "app/services/api/supabase/auth/useAuth"
 
 const logo = require("../../assets/images/logo.png")
 

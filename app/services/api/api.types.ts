@@ -54,6 +54,11 @@ export interface Quiz {
   R: QuizQuestion[]
 }
 
+export interface QuizDB {
+  quiz: Quiz
+  config: { nQuestions: number; language: string }
+}
+
 export const Categories: Record<number, TxKeyPath> = {
   1: "categories.category1",
   2: "categories.category2",

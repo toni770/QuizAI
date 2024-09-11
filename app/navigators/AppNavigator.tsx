@@ -20,7 +20,7 @@ import { DemoTabParamList } from "./DemoNavigator"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
 import { Quiz } from "app/services/api"
-import { useAuth } from "app/services/api/auth/useAuth"
+import { useAuth } from "app/services/api/supabase/auth/useAuth"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
