@@ -1,4 +1,11 @@
-import React, { createContext, PropsWithChildren, useCallback, useContext, useState } from "react"
+import React, {
+  createContext,
+  PropsWithChildren,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from "react"
 import { Session, supabase } from "./supabase"
 import { AuthResponse, AuthTokenResponsePassword } from "@supabase/supabase-js"
 
@@ -45,6 +52,29 @@ export function useAuth() {
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [token, setToken] = useState<AuthState["token"]>(undefined)
+
+  useEffect(() => {
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      switch (event) {
+        case "SIGNED_OUT":
+          setToken(undefined)
+          break
+        case "INITIAL_SESSION":
+        case "SIGNED_IN":
+        case "TOKEN_REFRESHED":
+          setToken(session?.access_token)
+          break
+        default:
+        // no-op
+      }
+    })
+
+    return () => {
+      subscription.unsubscribe()
+    }
+  }, [supabase])
 
   const signIn = useCallback(
     async ({ email, password }: SignInProps) => {
