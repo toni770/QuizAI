@@ -144,6 +144,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   }, [supabase])
 
   const signOut = useCallback(async () => {
+    GoogleSignin.signOut()
     await supabase.auth.signOut()
     setToken(undefined)
   }, [supabase])
