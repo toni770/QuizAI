@@ -17,12 +17,10 @@
       "fallbackToCacheTimeout": 0
     },
     "jsEngine": "hermes",
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "android": {
       "icon": "./assets/images/app-icon-android-legacy.png",
-      "package": "com.quiz.quizAI",
+      "package": "com.trivia.AIquiz",
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/app-icon-android-adaptive-foreground.png",
         "backgroundImage": "./assets/images/app-icon-android-adaptive-background.png"
@@ -36,7 +34,7 @@
     "ios": {
       "icon": "./assets/images/app-icon-ios.png",
       "supportsTablet": true,
-      "bundleIdentifier": "com.quiz.quizAI",
+      "bundleIdentifier": "com.trivia.AIquiz",
       "splash": {
         "image": "./assets/images/splash-logo-ios-mobile.png",
         "tabletImage": "./assets/images/splash-logo-ios-tablet.png",
@@ -53,8 +51,14 @@
       },
       "bundler": "metro"
     },
+    "extra": {
+      "eas": {
+        "projectId": "1a2bfed4-c685-4dee-ab20-56120071f1a7"
+      }
+    },
     "plugins": [
       "expo-localization",
+      "expo-secure-store",
       [
         "expo-build-properties",
         {
@@ -64,6 +68,12 @@
           "android": {
             "newArchEnabled": false
           }
+        }
+      ],
+      [
+        "@react-native-google-signin/google-signin",
+        {
+          "iosUrlScheme": "com.googleusercontent.apps.502033037230-25dg1l359jl4747kv5nv789l6robf6a6"
         }
       ],
       "expo-font"

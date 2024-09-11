@@ -3,6 +3,9 @@ export interface ConfigBaseProps {
   catchErrors: "always" | "dev" | "prod" | "never"
   exitRoutes: string[]
   QUIZ_API: { USE: boolean; URL: string; KEY: string; PROMPT: string }
+  supabaseUrl: string
+  supabaseAnonKey: string
+  googleWebClientId: string
 }
 
 export type PersistNavigationConfig = ConfigBaseProps["persistNavigation"]
@@ -22,6 +25,13 @@ const BaseConfig: ConfigBaseProps = {
    * is pressed while in that screen. Only affects Android.
    */
   exitRoutes: ["Welcome"],
+
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  supabaseUrl: process.env.EXPO_PUBLIC_SUPABASE_URL!,
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  supabaseAnonKey: process.env.EXPO_PUBLIC_SUPABASE_ANON_KEY!,
+  // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+  googleWebClientId: process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID!,
 
   QUIZ_API: {
     USE: true,

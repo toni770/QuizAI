@@ -16,11 +16,11 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../config"
-import { useStores } from "../models"
 import { DemoTabParamList } from "./DemoNavigator"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
 import { Quiz } from "app/services/api"
+import { useAuth } from "app/services/api/auth/useAuth"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -61,9 +61,7 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStack
 const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
-  const {
-    authenticationStore: { isAuthenticated },
-  } = useStores()
+  const { isAuthenticated } = useAuth()
 
   return (
     <Stack.Navigator
@@ -72,17 +70,17 @@ const AppStack = observer(function AppStack() {
     >
       {isAuthenticated ? (
         <>
-          {/* <Stack.Screen name="Welcome" component={Screens.WelcomeScreen} />
-
-          <Stack.Screen name="Demo" component={DemoNavigator} /> */}
-
           <Stack.Screen name="QuizGenerator" component={Screens.QuizGeneratorScreen} />
           <Stack.Screen name="Quiz" component={Screens.QuizScreen} />
           <Stack.Screen name="QuizResults" component={Screens.QuizResultsScreen} />
         </>
       ) : (
         <>
-          <Stack.Screen name="Login" component={Screens.LoginScreen} />
+          <Stack.Screen
+            name="Login"
+            component={Screens.LogInScreen}
+            options={{ animationTypeForReplace: "pop" }}
+          />
         </>
       )}
 
