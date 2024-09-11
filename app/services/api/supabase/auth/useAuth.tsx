@@ -6,7 +6,7 @@ import React, {
   useEffect,
   useState,
 } from "react"
-import { Session, supabase } from "./supabase"
+import { Session, supabase } from "../supabase"
 import { AuthResponse, AuthTokenResponsePassword, User } from "@supabase/supabase-js"
 import GoogleSignin from "./googleSignIn"
 
