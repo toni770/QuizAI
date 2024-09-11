@@ -13,7 +13,7 @@ interface LogInScreenProps extends AppStackScreenProps<"Login"> {}
 
 export const LogInScreen: FC<LogInScreenProps> = observer(function SignInScreen() {
   const $bottomContainerInsets = useSafeAreaInsetsStyle(["bottom"])
-  const { signIn, signUp } = useAuth()
+  const { signIn, signUp, signInWithGoogle } = useAuth()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
 
@@ -30,6 +30,10 @@ export const LogInScreen: FC<LogInScreenProps> = observer(function SignInScreen(
   const onForgotPassword = () => {
     // Forgot Password Flow
     console.log("Forgot Password Flow")
+  }
+
+  const onSignInWithGoogle = async () => {
+    signInWithGoogle()
   }
 
   return (
@@ -64,6 +68,9 @@ export const LogInScreen: FC<LogInScreenProps> = observer(function SignInScreen(
             <Text style={$buttonDivider}>- or -</Text>
             <Button preset="reversed" onPress={onSignUp}>
               Sign Up
+            </Button>
+            <Button preset="default" onPress={onSignInWithGoogle}>
+              Sign in with Google
             </Button>
           </View>
           <View style={$cap} />
