@@ -102,17 +102,19 @@ function App(props: AppProps) {
   // otherwise, we're ready to render the app
   return (
     <AuthProvider>
-      <SafeAreaProvider initialMetrics={initialWindowMetrics}>
-        <ErrorBoundary catchErrors={Config.catchErrors}>
-          <GestureHandlerRootView style={$container}>
-            <AppNavigator
-              linking={linking}
-              initialState={initialNavigationState}
-              onStateChange={onNavigationStateChange}
-            />
-          </GestureHandlerRootView>
-        </ErrorBoundary>
-      </SafeAreaProvider>
+      <DBProvider>
+        <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+          <ErrorBoundary catchErrors={Config.catchErrors}>
+            <GestureHandlerRootView style={$container}>
+              <AppNavigator
+                linking={linking}
+                initialState={initialNavigationState}
+                onStateChange={onNavigationStateChange}
+              />
+            </GestureHandlerRootView>
+          </ErrorBoundary>
+        </SafeAreaProvider>
+      </DBProvider>
     </AuthProvider>
   )
 }
