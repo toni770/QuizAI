@@ -13,6 +13,7 @@ import GoogleSignin from "./googleSignIn"
 type AuthState = {
   isAuthenticated: boolean
   token?: Session["access_token"]
+  user?: Session["user"]
 }
 
 type SignInProps = {
@@ -67,6 +68,7 @@ export function useAuth() {
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [token, setToken] = useState<AuthState["token"]>(undefined)
+  const [user, setUser] = useState<AuthState["user"]>(undefined)
 
   useEffect(() => {
     const {
@@ -100,6 +102,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
       if (result.data?.session?.access_token) {
         setToken(result.data.session.access_token)
+        setUser(result.data.user)
       }
 
       return result
@@ -114,8 +117,9 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         password,
       })
 
-      if (result.data?.session?.access_token) {
+      if (result.data?.session?.access_token && result.data?.user) {
         setToken(result.data.session.access_token)
+        setUser(result.data.user)
       }
 
       return result
@@ -133,6 +137,10 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
           token: userInfo.data.idToken,
         })
         console.log(error, data)
+        if (data?.session?.access_token) {
+          setToken(data.session.access_token)
+          setUser(data.user)
+        }
         return { data }
       } else {
         return { data: { user: null, session: null } }
@@ -147,6 +155,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     GoogleSignin.signOut()
     await supabase.auth.signOut()
     setToken(undefined)
+    setUser(undefined)
   }, [supabase])
 
   return (
@@ -154,6 +163,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       value={{
         isAuthenticated: !!token,
         token,
+        user,
         signIn,
         signUp,
         signOut,

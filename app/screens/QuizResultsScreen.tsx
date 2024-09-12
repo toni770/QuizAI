@@ -11,14 +11,9 @@ interface QuizResultsScreenProps extends AppStackScreenProps<"QuizResults"> {}
 export const QuizResultsScreen: FC<QuizResultsScreenProps> = observer(function QuizResultsScreen(
   _props,
 ) {
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
-
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
-
   const nav = _props.navigation
   const { score } = _props.route.params
+
   return (
     <View style={$root}>
       <View style={$buttonContainer}>

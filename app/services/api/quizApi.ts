@@ -105,15 +105,15 @@ export class QuizApi extends Api {
         console.log(data.usage)
 
         // Get response from api.
-        const apiQuestions = JSON.parse(data.choices[0].message.content)
+        const apiQuiz = JSON.parse(data.choices[0].message.content)
 
-        if (apiQuestions.Error) {
-          throw apiQuestions.Error
+        if (apiQuiz.Error) {
+          throw apiQuiz.Error
         }
 
         // Add quiz to db.
         const result = await dbApi.addQuiz({
-          quiz: apiQuestions,
+          quiz: apiQuiz,
           config: { nQuestions: quizParams.numQuestions, language: quizParams.language },
         })
 
@@ -121,7 +121,7 @@ export class QuizApi extends Api {
           throw result.error
         }
 
-        return { data: apiQuestions, success: true }
+        return { data: { ...apiQuiz, id: result.insertId }, success: true }
       } else {
         return { data: quiz, success: true }
       }

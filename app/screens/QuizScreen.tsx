@@ -8,6 +8,8 @@ import { Categories } from "app/services/api/api.types"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 import { translate } from "../i18n/translate"
+import { dbApi } from "app/services/api/supabase/db/supabaseDBApi"
+import { useAuth } from "app/services/api/supabase/auth/useAuth"
 
 interface QuizScreenProps extends AppStackScreenProps<"Quiz"> {}
 
@@ -26,17 +28,26 @@ export const QuizScreen: FC<QuizScreenProps> = observer(function QuizScreen(_pro
     }
   }, [quiz, currentQuestionIndex])
 
-  // Pull in one of our MST stores
-  // const { someStore, anotherStore } = useStores()
-
-  // Pull in navigation via hook
-  // const navigation = useNavigation()
+  const { user } = useAuth()
 
   const answerQuestion = function (answer: string) {
     if (answer === quiz.R[currentQuestionIndex].A[0]) {
       setScore(score + 10)
     }
     setSelectedAnswer(answer)
+  }
+
+  const nextQuestion = async function () {
+    if (currentQuestionIndex < quiz.R.length - 1) {
+      setSelectedAnswer(undefined)
+      setCurrentQuestionIndex(currentQuestionIndex + 1)
+    } else {
+      if (user) {
+        await dbApi.completeQuiz(quiz.id, user?.id, score)
+      }
+
+      _props.navigation.navigate("QuizResults", { score })
+    }
   }
 
   return (
@@ -65,20 +76,7 @@ export const QuizScreen: FC<QuizScreenProps> = observer(function QuizScreen(_pro
         )
       })}
 
-      {selectedAnswer && (
-        <Icon
-          icon={"caretRight"}
-          size={50}
-          onPress={() => {
-            if (currentQuestionIndex < quiz.R.length - 1) {
-              setSelectedAnswer(undefined)
-              setCurrentQuestionIndex(currentQuestionIndex + 1)
-            } else {
-              _props.navigation.navigate("QuizResults", { score })
-            }
-          }}
-        />
-      )}
+      {selectedAnswer && <Icon icon={"caretRight"} size={50} onPress={nextQuestion} />}
     </Screen>
   )
 })

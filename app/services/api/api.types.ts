@@ -49,6 +49,7 @@ export interface QuizQuestion {
 }
 
 export interface Quiz {
+  id: number
   T: string
   C: number
   R: QuizQuestion[]
