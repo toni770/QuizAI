@@ -16,11 +16,10 @@ import React from "react"
 import { useColorScheme } from "react-native"
 import * as Screens from "app/screens"
 import Config from "../config"
-import { DemoTabParamList } from "./DemoNavigator"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
-import { Quiz } from "app/services/api"
-import { useAuth } from "app/services/api/auth/useAuth"
+import { useAuth } from "app/services/api/supabase/auth/useAuth"
+import { TabsNavigator, TabsNavigatorParamList } from "./TabsNavigator"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -38,11 +37,8 @@ import { useAuth } from "app/services/api/auth/useAuth"
 export type AppStackParamList = {
   Welcome: undefined
   Login: undefined
-  Demo: NavigatorScreenParams<DemoTabParamList>
+  Tabs: NavigatorScreenParams<TabsNavigatorParamList>
   // 🔥 Your screens go here
-  QuizGenerator: undefined
-  Quiz: { quiz: Quiz }
-  QuizResults: { score: number }
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
@@ -64,15 +60,10 @@ const AppStack = observer(function AppStack() {
   const { isAuthenticated } = useAuth()
 
   return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
-      initialRouteName={isAuthenticated ? "QuizGenerator" : "Login"}
-    >
+    <Stack.Navigator screenOptions={{ headerShown: false, navigationBarColor: colors.background }}>
       {isAuthenticated ? (
         <>
-          <Stack.Screen name="QuizGenerator" component={Screens.QuizGeneratorScreen} />
-          <Stack.Screen name="Quiz" component={Screens.QuizScreen} />
-          <Stack.Screen name="QuizResults" component={Screens.QuizResultsScreen} />
+          <Stack.Screen name="Tabs" component={TabsNavigator} />
         </>
       ) : (
         <>

@@ -1,6 +1,7 @@
 import Config from "app/config"
 import { ApiConfig, APIResponse, OpenAIResponse, QuizParams } from "./api.types"
 import { Api } from "./api"
+import { dbApi } from "./supabase/db/supabaseDBApi"
 
 export const DEFAULT_QUIZ_API_CONFIG: ApiConfig = {
   url: Config.QUIZ_API.URL,
@@ -103,13 +104,24 @@ export class QuizApi extends Api {
 
         console.log(data.usage)
 
-        const apiQuestions = JSON.parse(data.choices[0].message.content)
+        // Get response from api.
+        const apiQuiz = JSON.parse(data.choices[0].message.content)
 
-        if (apiQuestions.Error) {
-          throw apiQuestions.Error
+        if (apiQuiz.Error) {
+          throw apiQuiz.Error
         }
 
-        return { data: apiQuestions, success: true }
+        // Add quiz to db.
+        const result = await dbApi.addQuiz({
+          quiz: apiQuiz,
+          config: { nQuestions: quizParams.numQuestions, language: quizParams.language },
+        })
+
+        if (result.error) {
+          throw result.error
+        }
+
+        return { data: { ...apiQuiz, id: result.insertId }, success: true }
       } else {
         return { data: quiz, success: true }
       }

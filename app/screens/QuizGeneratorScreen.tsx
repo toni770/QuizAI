@@ -1,13 +1,13 @@
 import React, { FC, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { ViewStyle } from "react-native"
-import { AppStackScreenProps } from "app/navigators"
+import { QuizStackScreenProps } from "app/navigators"
 import { Button, Screen, Text, TextField } from "app/components"
 import { quizApi } from "app/services/api"
-import { useAuth } from "app/services/api/auth/useAuth"
+import { useAuth } from "app/services/api/supabase/auth/useAuth"
 // import { useStores } from "app/models"
 
-interface QuizGeneratorScreenProps extends AppStackScreenProps<"QuizGenerator"> {}
+interface QuizGeneratorScreenProps extends QuizStackScreenProps<"QuizGenerator"> {}
 
 export const QuizGeneratorScreen: FC<QuizGeneratorScreenProps> = observer(
   function QuizGeneratorScreen(_props) {
@@ -27,7 +27,7 @@ export const QuizGeneratorScreen: FC<QuizGeneratorScreenProps> = observer(
         <Button
           text="Generate"
           onPress={async () => {
-            const result = await quizApi.getQuiz({ topic, language: "ES", numQuestions: 5 })
+            const result = await quizApi.getQuiz({ topic, language: "ES", numQuestions: 3 })
 
             if (result.success) {
               navigation.navigate("Quiz", { quiz: result.data })

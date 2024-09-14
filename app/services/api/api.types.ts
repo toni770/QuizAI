@@ -49,9 +49,15 @@ export interface QuizQuestion {
 }
 
 export interface Quiz {
+  id: number
   T: string
   C: number
   R: QuizQuestion[]
+}
+
+export interface QuizDB {
+  quiz: Quiz
+  config: { nQuestions: number; language: string }
 }
 
 export const Categories: Record<number, TxKeyPath> = {
