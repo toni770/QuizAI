@@ -1,7 +1,7 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
 import { View, ViewStyle } from "react-native"
-import { AppStackScreenProps } from "app/navigators"
+import { QuizStackScreenProps } from "app/navigators"
 import { Button, Icon, Screen, Text } from "app/components"
 import { shuffleArray } from "app/utils/shuffleArray"
 import { Categories } from "app/services/api/api.types"
@@ -11,7 +11,7 @@ import { translate } from "../i18n/translate"
 import { dbApi } from "app/services/api/supabase/db/supabaseDBApi"
 import { useAuth } from "app/services/api/supabase/auth/useAuth"
 
-interface QuizScreenProps extends AppStackScreenProps<"Quiz"> {}
+interface QuizScreenProps extends QuizStackScreenProps<"Quiz"> {}
 
 export const QuizScreen: FC<QuizScreenProps> = observer(function QuizScreen(_props) {
   const { quiz } = _props.route.params

@@ -4,7 +4,12 @@
  * Generally speaking, it will contain an auth flow (registration, login, forgot password)
  * and a "main" flow which the user will use once logged in.
  */
-import { DarkTheme, DefaultTheme, NavigationContainer } from "@react-navigation/native"
+import {
+  DarkTheme,
+  DefaultTheme,
+  NavigationContainer,
+  NavigatorScreenParams,
+} from "@react-navigation/native"
 import { createNativeStackNavigator, NativeStackScreenProps } from "@react-navigation/native-stack"
 import { observer } from "mobx-react-lite"
 import React from "react"
@@ -13,8 +18,8 @@ import * as Screens from "app/screens"
 import Config from "../config"
 import { navigationRef, useBackButtonHandler } from "./navigationUtilities"
 import { colors } from "app/theme"
-import { Quiz } from "app/services/api"
 import { useAuth } from "app/services/api/supabase/auth/useAuth"
+import { TabsNavigator, TabsNavigatorParamList } from "./TabsNavigator"
 
 /**
  * This type allows TypeScript to know what routes are defined in this navigator
@@ -32,10 +37,8 @@ import { useAuth } from "app/services/api/supabase/auth/useAuth"
 export type AppStackParamList = {
   Welcome: undefined
   Login: undefined
+  Tabs: NavigatorScreenParams<TabsNavigatorParamList>
   // 🔥 Your screens go here
-  QuizGenerator: undefined
-  Quiz: { quiz: Quiz }
-  QuizResults: { score: number }
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
@@ -57,15 +60,10 @@ const AppStack = observer(function AppStack() {
   const { isAuthenticated } = useAuth()
 
   return (
-    <Stack.Navigator
-      screenOptions={{ headerShown: false, navigationBarColor: colors.background }}
-      initialRouteName={isAuthenticated ? "QuizGenerator" : "Login"}
-    >
+    <Stack.Navigator screenOptions={{ headerShown: false, navigationBarColor: colors.background }}>
       {isAuthenticated ? (
         <>
-          <Stack.Screen name="QuizGenerator" component={Screens.QuizGeneratorScreen} />
-          <Stack.Screen name="Quiz" component={Screens.QuizScreen} />
-          <Stack.Screen name="QuizResults" component={Screens.QuizResultsScreen} />
+          <Stack.Screen name="Tabs" component={TabsNavigator} />
         </>
       ) : (
         <>

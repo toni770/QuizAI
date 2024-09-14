@@ -77,11 +77,13 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       switch (event) {
         case "SIGNED_OUT":
           setToken(undefined)
+          setUser(undefined)
           break
         case "INITIAL_SESSION":
         case "SIGNED_IN":
         case "TOKEN_REFRESHED":
           setToken(session?.access_token)
+          setUser(session?.user)
           break
         default:
         // no-op

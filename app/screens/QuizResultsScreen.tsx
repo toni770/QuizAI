@@ -1,12 +1,12 @@
 import React, { FC } from "react"
 import { observer } from "mobx-react-lite"
 import { Share, TextStyle, View, ViewStyle } from "react-native"
-import { AppStackScreenProps } from "app/navigators"
+import { QuizStackScreenProps } from "app/navigators"
 import { Button, Text } from "app/components"
 // import { useNavigation } from "@react-navigation/native"
 // import { useStores } from "app/models"
 
-interface QuizResultsScreenProps extends AppStackScreenProps<"QuizResults"> {}
+interface QuizResultsScreenProps extends QuizStackScreenProps<"QuizResults"> {}
 
 export const QuizResultsScreen: FC<QuizResultsScreenProps> = observer(function QuizResultsScreen(
   _props,

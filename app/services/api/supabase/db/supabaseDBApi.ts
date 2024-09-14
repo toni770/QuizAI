@@ -1,6 +1,7 @@
+import { PostgrestError } from "@supabase/supabase-js"
 import { QuizDB } from "../../api.types"
 import { supabase } from "../supabase"
-import { DBApi, DBInsertResponse } from "./dbApi"
+import { DBApi, DBInsertResponse, DBStadisticsResponse } from "./dbApi"
 
 export class SupabaseDBApi implements DBApi {
   // Insert Quiz to DB.
@@ -44,6 +45,25 @@ export class SupabaseDBApi implements DBApi {
       return { success: false, error: { name: error.code, message: error.message } }
     } else {
       return { success: true, insertId: data[0].id }
+    }
+  }
+
+  // Get user stadistics from DB.
+  // @params user Id
+  // @returns user completed quizes by categories.
+  async getUserStadistics(userId: string): Promise<DBStadisticsResponse> {
+    try {
+      const { data, error } = await supabase.rpc("get_user_stats", { userid: userId })
+
+      console.log(data)
+      if (error) {
+        throw error
+      } else {
+        return { success: true, data }
+      }
+    } catch (error) {
+      const err: PostgrestError = error as PostgrestError
+      return { success: false, error: { name: err.code, message: err.message } }
     }
   }
 }
