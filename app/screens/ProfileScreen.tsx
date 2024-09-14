@@ -1,6 +1,6 @@
 import React, { FC, useEffect, useState } from "react"
 import { observer } from "mobx-react-lite"
-import { View, ViewStyle } from "react-native"
+import { View, ViewStyle, Image, ImageStyle } from "react-native"
 import { TabScreenProps } from "app/navigators"
 import { Screen, Text } from "app/components"
 import { useAuth } from "app/services/api/supabase/auth/useAuth"
@@ -40,6 +40,16 @@ export const ProfileScreen: FC<ProfileScreenProps> = observer(function ProfileSc
     <Screen style={$root} preset="fixed">
       {data ? (
         <>
+          <View style={$identity}>
+            <Image
+              style={$image}
+              source={{
+                uri: user?.user_metadata.avatar_url,
+              }}
+            />
+            <Text text={user?.user_metadata.name} preset="heading" />
+          </View>
+
           <Text text={"Total"} preset="subheading" />
           <Text text={data.totalQuiz.toString()} preset="heading" />
           {Object.entries(Categories).map(([key, value], index) => {
@@ -62,4 +72,17 @@ const $root: ViewStyle = {
   flex: 1,
   justifyContent: "center",
   alignItems: "center",
+}
+
+const $image: ImageStyle = {
+  width: 50,
+  height: 50,
+  marginRight: 10,
+}
+
+const $identity: ViewStyle = {
+  flexDirection: "row",
+  padding: 10,
+  borderBottomWidth: 1,
+  width: "100%",
 }

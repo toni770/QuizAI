@@ -4,7 +4,6 @@ import { ViewStyle } from "react-native"
 import { QuizStackScreenProps } from "app/navigators"
 import { Button, Screen, Text, TextField } from "app/components"
 import { quizApi } from "app/services/api"
-import { useAuth } from "app/services/api/supabase/auth/useAuth"
 // import { useStores } from "app/models"
 
 interface QuizGeneratorScreenProps extends QuizStackScreenProps<"QuizGenerator"> {}
@@ -18,7 +17,6 @@ export const QuizGeneratorScreen: FC<QuizGeneratorScreenProps> = observer(
     const { navigation } = _props
 
     const [topic, setTopic] = useState<string>("")
-    const { signOut } = useAuth()
 
     return (
       <Screen style={$root} preset="fixed">
@@ -36,8 +34,6 @@ export const QuizGeneratorScreen: FC<QuizGeneratorScreenProps> = observer(
             }
           }}
         />
-
-        <Button onPress={signOut}>Sign Out</Button>
       </Screen>
     )
   },

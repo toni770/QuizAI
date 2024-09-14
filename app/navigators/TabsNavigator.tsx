@@ -12,6 +12,7 @@ import * as Screens from "app/screens"
 export type TabsNavigatorParamList = {
   QuizNavigator: QuizNavigatorParamList
   Profile: undefined
+  Settings: undefined
 }
 
 export type TabScreenProps<T extends keyof TabsNavigatorParamList> = CompositeScreenProps<
@@ -55,6 +56,17 @@ export const TabsNavigator = () => {
             <Icon icon="view" color={focused ? colors.tint : undefined} size={30} />
           ),
           tabBarLabel: "Profile",
+        }}
+      />
+
+      <Tab.Screen
+        name="Settings"
+        component={Screens.SettingsScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon icon="settings" color={focused ? colors.tint : undefined} size={30} />
+          ),
+          tabBarLabel: "Settings",
         }}
       />
     </Tab.Navigator>
