@@ -13,6 +13,7 @@ export type TabsNavigatorParamList = {
   QuizNavigator: QuizNavigatorParamList
   Profile: undefined
   Settings: undefined
+  FriendList: undefined
 }
 
 export type TabScreenProps<T extends keyof TabsNavigatorParamList> = CompositeScreenProps<
@@ -48,6 +49,16 @@ export const TabsNavigator = () => {
         }}
       />
 
+      <Tab.Screen
+        name="FriendList"
+        component={Screens.FriendListScreen}
+        options={{
+          tabBarIcon: ({ focused }) => (
+            <Icon icon="lock" color={focused ? colors.tint : undefined} size={30} />
+          ),
+          tabBarLabel: "Friends",
+        }}
+      />
       <Tab.Screen
         name="Profile"
         component={Screens.ProfileScreen}

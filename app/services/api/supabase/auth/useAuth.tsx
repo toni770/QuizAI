@@ -9,9 +9,12 @@ import React, {
 import { Session, supabase } from "../supabase"
 import { AuthResponse, AuthTokenResponsePassword, User } from "@supabase/supabase-js"
 import GoogleSignin from "./googleSignIn"
+import { dbApi } from "../db/supabaseDBApi"
 
 type AuthState = {
   isAuthenticated: boolean
+  hasNickname: boolean
+  nickname?: string
   token?: Session["access_token"]
   user?: Session["user"]
 }
@@ -43,15 +46,19 @@ type AuthContextType = {
   signUp: (props: SignUpProps) => Promise<AuthResponse>
   signInWithGoogle: () => Promise<GoogleAuthResponse>
   signOut: () => void
+  updateNickname: (userId: string, nickname: string) => Promise<void>
 } & AuthState
 
 const AuthContext = createContext<AuthContextType>({
   isAuthenticated: false,
+  hasNickname: false,
   token: undefined,
+  nickname: undefined,
   signIn: () => new Promise(() => ({})),
   signInWithGoogle: () => new Promise(() => ({})),
   signUp: () => new Promise(() => ({})),
   signOut: () => undefined,
+  updateNickname: () => new Promise(() => ({})),
 })
 
 export function useAuth() {
@@ -69,6 +76,7 @@ export function useAuth() {
 export const AuthProvider = ({ children }: PropsWithChildren) => {
   const [token, setToken] = useState<AuthState["token"]>(undefined)
   const [user, setUser] = useState<AuthState["user"]>(undefined)
+  const [nickname, setNickname] = useState<AuthState["nickname"]>(undefined)
 
   useEffect(() => {
     const {
@@ -122,6 +130,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       if (result.data?.session?.access_token && result.data?.user) {
         setToken(result.data.session.access_token)
         setUser(result.data.user)
+        getNickname(result.data.user.id)
       }
 
       return result
@@ -142,6 +151,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         if (data?.session?.access_token) {
           setToken(data.session.access_token)
           setUser(data.user)
+          getNickname(data.user.id)
         }
         return { data }
       } else {
@@ -160,16 +170,37 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     setUser(undefined)
   }, [supabase])
 
+  const updateNickname = useCallback(
+    async (userId: string, nickname: string) => {
+      await dbApi.setUserNickname(userId, nickname)
+      setNickname(nickname)
+    },
+    [supabase],
+  )
+
+  const getNickname = useCallback(
+    async (userId: string) => {
+      const result = await dbApi.getUserNickname(userId)
+      if (result.success && result.nickname) {
+        setNickname(result.nickname)
+      }
+    },
+    [supabase],
+  )
+
   return (
     <AuthContext.Provider
       value={{
         isAuthenticated: !!token,
+        hasNickname: !!nickname,
+        nickname,
         token,
         user,
         signIn,
         signUp,
         signOut,
         signInWithGoogle,
+        updateNickname,
       }}
     >
       {children}

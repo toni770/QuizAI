@@ -39,6 +39,7 @@ export type AppStackParamList = {
   Login: undefined
   Tabs: NavigatorScreenParams<TabsNavigatorParamList>
   // 🔥 Your screens go here
+  SelectNickName: undefined
   // IGNITE_GENERATOR_ANCHOR_APP_STACK_PARAM_LIST
 }
 
@@ -57,14 +58,18 @@ export type AppStackScreenProps<T extends keyof AppStackParamList> = NativeStack
 const Stack = createNativeStackNavigator<AppStackParamList>()
 
 const AppStack = observer(function AppStack() {
-  const { isAuthenticated } = useAuth()
+  const { isAuthenticated, hasNickname } = useAuth()
 
   return (
     <Stack.Navigator screenOptions={{ headerShown: false, navigationBarColor: colors.background }}>
       {isAuthenticated ? (
-        <>
-          <Stack.Screen name="Tabs" component={TabsNavigator} />
-        </>
+        hasNickname ? (
+          <>
+            <Stack.Screen name="Tabs" component={TabsNavigator} />
+          </>
+        ) : (
+          <Stack.Screen name="SelectNickName" component={Screens.SelectNickNameScreen} />
+        )
       ) : (
         <>
           <Stack.Screen

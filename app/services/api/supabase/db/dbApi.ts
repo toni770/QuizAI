@@ -12,6 +12,12 @@ export type DBStadisticsResponse = {
   error?: Error
 }
 
+export type DBNicknameResponse = {
+  success: boolean
+  nickname?: string
+  error?: Error
+}
+
 export type UserStadistic = { totalQuiz: number; categoryTotalQuiz: number[] }
 
 export interface DBApi {
@@ -29,4 +35,13 @@ export interface DBApi {
   // @params user Id
   // @returns user completed quizes by categories.
   getUserStadistics: (userId: string) => Promise<DBStadisticsResponse>
+  // Get user nickname.
+  // @params user Id
+  // result Gets nickname
+  getUserNickname: (userId: string) => Promise<DBNicknameResponse>
+  // Set user nickname.
+  // @params user Id.
+  // @params nickname.
+  // @return insertId/success/error.
+  setUserNickname: (userId: string, nickname: string) => Promise<DBInsertResponse>
 }
