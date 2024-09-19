@@ -1,8 +1,13 @@
-import { QuizDB } from "../../api.types"
+import { FriendList, FriendRequest, QuizDB } from "../../api.types"
 
 export type DBInsertResponse = {
   success: boolean
   insertId?: number
+  error?: Error
+}
+
+export type DBDeleteUpdateResponse = {
+  success: boolean
   error?: Error
 }
 
@@ -18,7 +23,19 @@ export type DBNicknameResponse = {
   error?: Error
 }
 
-export type UserStadistic = { totalQuiz: number; categoryTotalQuiz: number[] }
+export type DBFriendRequestResponse = {
+  success: boolean
+  friendRequest?: FriendRequest[]
+  error?: Error
+}
+
+export type DBFriendListResponse = {
+  success: boolean
+  friendList?: FriendList
+  error?: Error
+}
+
+export type UserStadistic = { name: string; totalQuiz: number; categoryTotalQuiz: number[] }
 
 export interface DBApi {
   // Insert Quiz to DB.
@@ -44,4 +61,31 @@ export interface DBApi {
   // @params nickname.
   // @return insertId/success/error.
   setUserNickname: (userId: string, nickname: string) => Promise<DBInsertResponse>
+  // Get user friend list.
+  // @params userId
+  // @return List of friends.
+  getFriendList: (userId: string) => Promise<DBFriendListResponse>
+  // Creates friend request.
+  // @params userId
+  // @params friendNickname
+  // @return  insertId/success/error.
+  sendFriendRequest: (userId: string, friendName: string) => Promise<DBInsertResponse>
+  // Get pendent friend request.
+  // @params userId
+  // @return array of requests.
+  getFriendRequest: (userId: string) => Promise<DBFriendRequestResponse>
+  // Deletes friend request and creates new friendship.
+  // @params userId
+  // @params friendId
+  // @return  insertId/success/error.
+  acceptFriendRequest: (userId: string, friendId: string) => Promise<DBInsertResponse>
+  // Deletes friend request.
+  // @params requestId
+  // @return  success/error.
+  cancelFriendRequest: (requestId: string) => Promise<DBDeleteUpdateResponse>
+  // Deletes friendship.
+  // @params userId
+  // @params friendId
+  // @return  success/error.
+  deleteFriend: (userId: string, friendId: string) => Promise<DBDeleteUpdateResponse>
 }

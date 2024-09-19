@@ -10,6 +10,7 @@ import { Session, supabase } from "../supabase"
 import { AuthResponse, AuthTokenResponsePassword, User } from "@supabase/supabase-js"
 import GoogleSignin from "./googleSignIn"
 import { dbApi } from "../db/supabaseDBApi"
+import { DBInsertResponse } from "../db/dbApi"
 
 type AuthState = {
   isAuthenticated: boolean
@@ -46,7 +47,7 @@ type AuthContextType = {
   signUp: (props: SignUpProps) => Promise<AuthResponse>
   signInWithGoogle: () => Promise<GoogleAuthResponse>
   signOut: () => void
-  updateNickname: (userId: string, nickname: string) => Promise<void>
+  updateNickname: (userId: string, nickname: string) => Promise<DBInsertResponse>
 } & AuthState
 
 const AuthContext = createContext<AuthContextType>({
@@ -86,12 +87,14 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
         case "SIGNED_OUT":
           setToken(undefined)
           setUser(undefined)
+          setNickname(undefined)
           break
         case "INITIAL_SESSION":
         case "SIGNED_IN":
         case "TOKEN_REFRESHED":
           setToken(session?.access_token)
           setUser(session?.user)
+          if (session) getNickname(session.user.id)
           break
         default:
         // no-op
@@ -168,12 +171,16 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
     await supabase.auth.signOut()
     setToken(undefined)
     setUser(undefined)
+    setNickname(undefined)
   }, [supabase])
 
   const updateNickname = useCallback(
-    async (userId: string, nickname: string) => {
-      await dbApi.setUserNickname(userId, nickname)
-      setNickname(nickname)
+    async (userId: string, nickname: string): Promise<DBInsertResponse> => {
+      const result = await dbApi.setUserNickname(userId, nickname)
+      if (!result.error) {
+        setNickname(nickname)
+      }
+      return result
     },
     [supabase],
   )
@@ -181,6 +188,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
   const getNickname = useCallback(
     async (userId: string) => {
       const result = await dbApi.getUserNickname(userId)
+      console.log(result)
       if (result.success && result.nickname) {
         setNickname(result.nickname)
       }

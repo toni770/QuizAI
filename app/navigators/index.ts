@@ -3,3 +3,4 @@ export * from "./navigationUtilities"
 // export other navigators from here
 export * from "./TabsNavigator"
 export * from "./QuizNavigator"
+export * from "./FriendsNavigator"

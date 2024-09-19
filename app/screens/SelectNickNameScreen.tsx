@@ -17,9 +17,12 @@ export const SelectNickNameScreen: FC<SelectNickNameScreenProps> = observer(
         <TextField value={name} onChangeText={(value) => setName(value)} />
         <Button
           text="Create"
-          onPress={() => {
+          onPress={async () => {
             if (user) {
-              updateNickname(user.id, name)
+              const result = await updateNickname(user.id, name)
+              if (result.error) {
+                console.log(result.error)
+              }
             }
           }}
         />

@@ -70,6 +70,14 @@ export const Categories: Record<number, TxKeyPath> = {
   7: "categories.category7",
 }
 
+export type FriendList = { friend_id: string; profile: { nickname: string } }[]
+
+export type FriendRequest = {
+  id: string
+  sender_id: string
+  profile: { nickname: string }
+}
+
 export interface APIResponse {
   data?: any
   error?: any

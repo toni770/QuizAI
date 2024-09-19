@@ -8,12 +8,13 @@ import { TextStyle, ViewStyle } from "react-native"
 import { QuizNavigator, QuizNavigatorParamList } from "./QuizNavigator"
 import { Icon } from "app/components"
 import * as Screens from "app/screens"
+import { FriendsNavigator } from "./FriendsNavigator"
 
 export type TabsNavigatorParamList = {
   QuizNavigator: QuizNavigatorParamList
   Profile: undefined
   Settings: undefined
-  FriendList: undefined
+  FriendsNavigator: undefined
 }
 
 export type TabScreenProps<T extends keyof TabsNavigatorParamList> = CompositeScreenProps<
@@ -50,8 +51,8 @@ export const TabsNavigator = () => {
       />
 
       <Tab.Screen
-        name="FriendList"
-        component={Screens.FriendListScreen}
+        name="FriendsNavigator"
+        component={FriendsNavigator}
         options={{
           tabBarIcon: ({ focused }) => (
             <Icon icon="lock" color={focused ? colors.tint : undefined} size={30} />
