@@ -144,7 +144,7 @@ export class SupabaseDBApi implements DBApi {
       const { data, error } = await supabase
         .from("FriendRequest")
         .select("id, sender_id, profile:UserProfile!sender_id(nickname)")
-        .eq("user_id", userId)
+        .eq("receiver_id", userId)
 
       if (error) {
         throw error
@@ -163,32 +163,37 @@ export class SupabaseDBApi implements DBApi {
   // @return  insertId/success/error.
   async sendFriendRequest(userId: string, friendName: string): Promise<DBInsertResponse> {
     try {
-      const { data, error } = await supabase
-        .from("UserProfiles")
+      const response = await supabase
+        .from("UserProfile")
         .select("user_id")
         .eq("nickname", friendName)
-        .single()
+        .neq("user_id", userId)
 
-      const userData = data
+      console.log(response.data)
+
+      if (response.error) {
+        throw response.error
+      }
+
+      if (response.data.length === 0) {
+        throw Error("No user found")
+      }
+      const userData = response.data[0]
+
+      // COMPROBAR SI YA ES AMIGO O SI REQUEST YA ENVIADA. (RPC FUNCTION)
+      const { data, error } = await supabase
+        .from("FriendRequest")
+        .insert({
+          sender_id: userId,
+          receiver_id: userData?.user_id,
+        })
+        .select()
 
       if (error) {
         throw error
-      } else {
-        // COMPROBAR SI YA ES AMIGO O SI REQUEST YA ENVIADA. (RPC FUNCTION)
-        const { data, error } = await supabase
-          .from("FriendRequest")
-          .insert({
-            sender_id: userId,
-            receiver_id: userData?.user_id,
-          })
-          .select()
-
-        if (error) {
-          throw error
-        }
-
-        return { success: true, insertId: data[0].id }
       }
+
+      return { success: true, insertId: data[0].id }
     } catch (error) {
       const err: PostgrestError = error as PostgrestError
       return { success: false, error: { name: err.code, message: err.message } }
@@ -201,30 +206,19 @@ export class SupabaseDBApi implements DBApi {
   // @return  insertId/success/error.
   async acceptFriendRequest(userId: string, friendId: string): Promise<DBInsertResponse> {
     try {
-      const { error } = await supabase
-        .from("FriendRequest")
-        .delete()
-        .or(
-          `(sender_id.eq.${userId},receiver_id.eq.${friendId}), (receiver_id.eq.${friendId},sender_id.eq.${userId})`,
-        )
+      const { data, error } = await supabase
+        .from("Friends")
+        .insert([
+          { user_id: userId, friend_id: friendId },
+          { user_id: friendId, friend_id: userId },
+        ])
+        .select()
+
       if (error) {
         throw error
-      } else {
-        const { data, error } = await supabase
-          .from("Friends")
-          .insert([
-            { user_id: userId, friend_id: friendId },
-            { user_id: userId, friend_id: friendId },
-          ])
-          .select()
-          .single()
-
-        if (error) {
-          throw error
-        }
-
-        return { success: true, insertId: data.id }
       }
+
+      return { success: true, insertId: data[0].id }
     } catch (error) {
       const err: PostgrestError = error as PostgrestError
       return { success: false, error: { name: err.code, message: err.message } }
@@ -259,7 +253,7 @@ export class SupabaseDBApi implements DBApi {
         .from("Friends")
         .delete()
         .or(
-          `(user_id.eq.${userId},friend_id.eq.${friendId}), (user_id.eq.${friendId},friend_id.eq.${userId})`,
+          `and(user_id.eq.${userId},friend_id.eq.${friendId}), and(user_id.eq.${friendId},friend_id.eq.${userId})`,
         )
 
       if (error) {
